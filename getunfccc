@@ -1,0 +1,162 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: 0BSD
+
+import argparse
+import datetime
+import json
+import os
+import pathlib
+import secrets
+import sys
+import time
+import urllib.parse
+
+import lxml.etree  # noqa: DUO107
+import lxml.html  # noqa: DUO107
+import pycountry
+import pycurl
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+
+rheader = ["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+           "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"]
+
+
+def getfile(docid, outdir):
+    time.sleep(3 + secrets.randbelow(3))
+    url = f"https://unfccc.int/documents/{docid}"
+    realoutdir = f"{outdir}/{docid}"
+    os.makedirs(realoutdir)
+    print(f"Checking {url}...")
+    driver.get(url)
+    for link in driver.find_elements(by=By.TAG_NAME, value="a"):
+        durl = link.get_attribute("href")
+        if durl and durl.startswith("https://unfccc.int/sites/default/files/resource/"):
+            print(f"DOWNLOAD: {durl}")
+            fn = urllib.parse.unquote(durl.split("/")[-1])
+            outfp = f"{realoutdir}/_{fn}"
+            realoutfp = f"{realoutdir}/{fn}"
+            print(f"saving {durl} to {outfp}")
+            with open(outfp, "wb") as f:
+                c = pycurl.Curl()
+                c.setopt(pycurl.URL, durl)
+                c.setopt(pycurl.WRITEDATA, f)
+                c.setopt(pycurl.HTTPHEADER, rheader)
+                c.perform()
+                c.close()
+            os.rename(outfp, realoutfp)
+
+
+ap = argparse.ArgumentParser()
+ap.add_argument("year")
+ap.add_argument("-m", "--meta", action="store_true", help="Only fetch metadata")
+ap.add_argument("-r", "--resume", action="store_true", help="Resume mode")
+ap.add_argument("-o", "--outdir", help="Output directory (default out)")
+args = ap.parse_args()
+
+if args.outdir:
+    outdir = args.outdir
+else:
+    outdir = "out"
+
+if not args.resume:
+    os.mkdir(outdir)
+
+service = Service()
+driver = webdriver.Chrome(service=service)
+
+yurl = f"https://unfccc.int/ghg-inventories-annex-i-parties/{args.year}"
+driver.get(yurl)
+htmlsrc = driver.page_source
+
+lhtml = lxml.html.document_fromstring(htmlsrc)
+
+crt = {}
+nid = {}
+table = lhtml.xpath("//table")[0]
+
+nid = {}
+crt = {}
+for tr in table.xpath(".//tr"):
+    tds = tr.xpath("td")
+    if not tds:
+        continue
+    countryname = tds[0].text_content().strip().strip("1")
+    country = pycountry.countries.get(name=countryname)
+    if not country:
+        if countryname == "European Union":
+            countrycode = "EU"
+        else:
+            sys.exit(f"Cannot find code for {countryname}")
+    else:
+        countrycode = country.alpha_3
+
+    nidids = set()
+    for url in tds[2].xpath(".//a/@href"):
+        if url.startswith("#"):
+            continue
+        if not url.startswith("/documents/"):
+            sys.exit(f"Unexpected URL {url}")
+        docid = int(url.split("/")[-1])
+        nidids.add(docid)
+    nid[countrycode] = sorted(nidids)
+    crtids = set()
+    for url in tds[3].xpath("a/@href"):
+        if not url.startswith("/documents/"):
+            sys.exit(f"Unexpected URL {url}")
+        docid = int(url.split("/")[-1])
+        crtids.add(docid)
+    crt[countrycode] = sorted(crtids)
+
+
+jnid = json.dumps(nid, indent=2)
+jcrt = json.dumps(crt, indent=2)
+nidpath = f"{outdir}/{args.year}-unfccc-nid"
+crtpath = f"{outdir}/{args.year}-unfccc-crt"
+jnidpath = f"{nidpath}/{args.year}-unfccc-nid.json"
+jcrtpath = f"{crtpath}/{args.year}-unfccc-crt.json"
+if not args.resume:
+    os.mkdir(nidpath)
+    os.mkdir(crtpath)
+else:
+    oldjnid = pathlib.Path(jnidpath).read_text()
+    oldjcrt = pathlib.Path(jcrtpath).read_text()
+    utcts = int(datetime.datetime.now(datetime.UTC).timestamp())
+    if oldjnid != jnid:
+        print("NID files changed")
+        os.rename(jnidpath, f"{jnidpath}.{utcts}.bak")
+    if oldjcrt != jcrt:
+        print("CRT files changed")
+        os.rename(jcrtpath, f"{jcrtpath}.{utcts}.bak")
+
+pathlib.Path(jnidpath).write_text(jnid)
+pathlib.Path(jcrtpath).write_text(jcrt)
+
+if args.meta:
+    sys.exit(0)
+
+# Remove any stale empty dirs from previous runs
+if args.resume:
+    for root, dirs, files in os.walk(args.year):
+        if not dirs and not files:
+            print(f"Removing empty dir {root}")
+            os.rmdir(root)
+        for fn in files:
+            if fn.startswith("_"):
+                print(f"ERROR: Half-downloaded file {root}/{fn} found, please remove")
+                sys.exit(1)
+
+for country, citem in nid.items():
+    for docid in citem:
+        if not os.path.exists(f"{nidpath}/{country}/{docid}"):
+            getfile(docid, f"{nidpath}/{country}")
+        else:
+            print(f"{nidpath}/{country}/{docid} already exists")
+
+for country, citem in crt.items():
+    for docid in citem:
+        if not os.path.exists(f"{crtpath}/{country}/{docid}"):
+            getfile(docid, f"{crtpath}/{country}")
+        else:
+            print(f"{crtpath}/{country}/{docid} already exists")
