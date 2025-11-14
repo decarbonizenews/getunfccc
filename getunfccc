@@ -60,9 +60,6 @@ if args.outdir:
 else:
     outdir = "out"
 
-if not args.resume:
-    os.mkdir(outdir)
-
 service = Service()
 driver = webdriver.Chrome(service=service)
 
@@ -79,10 +76,12 @@ table = lhtml.xpath("//table")[0]
 nid = {}
 crt = {}
 for tr in table.xpath(".//tr"):
-    tds = tr.xpath("td")
+    tds = tr.xpath("td|th")
     if not tds:
         continue
     countryname = tds[0].text_content().strip().strip("1")
+    if countryname == "Party":
+        continue
     country = pycountry.countries.get(name=countryname)
     if not country:
         if countryname == "European Union":
@@ -109,6 +108,8 @@ for tr in table.xpath(".//tr"):
         crtids.add(docid)
     crt[countrycode] = sorted(crtids)
 
+if not args.resume:
+    os.mkdir(outdir)
 
 jnid = json.dumps(nid, indent=2)
 jcrt = json.dumps(crt, indent=2)
