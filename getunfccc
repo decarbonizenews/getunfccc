@@ -23,7 +23,32 @@ rheader = ["User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/53
            "(KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"]
 
 
+def getfileurl(docid, outdir):
+    os.makedirs(outdir, exist_ok=True)
+    durl = f"https://unfccc.int{docid}"
+    if " " in durl:
+        print("WARNING: invalid space in url, replacing...")
+        durl = durl.replace(" ", "%20")
+    print(f"DOWNLOAD: {durl}")
+    fn = urllib.parse.unquote(durl.rsplit("/", maxsplit=1)[-1])
+    outfp = f"{outdir}/_{fn}"
+    realoutfp = f"{outdir}/{fn}"
+    print(f"saving {durl} to {outfp}")
+    with open(outfp, "wb") as f:
+        c = pycurl.Curl()
+        c.setopt(pycurl.URL, durl)
+        c.setopt(pycurl.WRITEDATA, f)
+        c.setopt(pycurl.HTTPHEADER, rheader)
+        c.setopt(pycurl.FAILONERROR, True)  # noqa: FBT003
+        c.perform()
+        c.close()
+    os.rename(outfp, realoutfp)
+
+
 def getfile(docid, outdir):
+    if isinstance(docid, str):
+        getfileurl(docid, outdir)
+        return
     time.sleep(3 + secrets.randbelow(3))
     url = f"https://unfccc.int/documents/{docid}"
     realoutdir = f"{outdir}/{docid}"
@@ -43,6 +68,7 @@ def getfile(docid, outdir):
                 c.setopt(pycurl.URL, durl)
                 c.setopt(pycurl.WRITEDATA, f)
                 c.setopt(pycurl.HTTPHEADER, rheader)
+                c.setopt(pycurl.FAILONERROR, True)  # noqa: FBT003
                 c.perform()
                 c.close()
             os.rename(outfp, realoutfp)
@@ -63,7 +89,16 @@ else:
 service = Service()
 driver = webdriver.Chrome(service=service)
 
-yurl = f"https://unfccc.int/ghg-inventories-annex-i-parties/{args.year}"
+if args.year == "nonannexi":
+    crtcol = 1
+    nidcol = 2
+    yurl = ("https://unfccc.int/process-and-meetings/transparency-and-reporting/"
+            "reporting-and-review/transparency-data-and-tools/greenhouse-gas-data/"
+            "data-sources/greenhouse-gas-inventory-submissions-from-non-annex-i-parties")
+else:
+    crtcol = 3
+    nidcol = 2
+    yurl = f"https://unfccc.int/ghg-inventories-annex-i-parties/{args.year}"
 driver.get(yurl)
 htmlsrc = driver.page_source
 
@@ -79,10 +114,13 @@ for tr in table.xpath(".//tr"):
     tds = tr.xpath("td|th")
     if not tds:
         continue
-    countryname = tds[0].text_content().strip().strip("1")
+    countryname = tds[0].text_content().strip().strip("1234*")
     if countryname == "Party":
         continue
     country = pycountry.countries.get(name=countryname)
+    if not country:
+        # e.g., needed for "Republic of Moldova"
+        country = pycountry.countries.get(official_name=countryname)
     if not country:
         if countryname == "European Union":
             countrycode = "EU"
@@ -92,21 +130,41 @@ for tr in table.xpath(".//tr"):
         countrycode = country.alpha_3
 
     nidids = set()
-    for url in tds[2].xpath(".//a/@href"):
+    for url in tds[nidcol].xpath(".//a/@href"):
         if url.startswith("#"):
             continue
-        if not url.startswith("/documents/"):
-            sys.exit(f"Unexpected URL {url}")
-        docid = int(url.split("/")[-1])
+        if "/items/3599.php" in url:
+            # broken link on the UNFCCC non-annexi page,
+            # remove when fixed reported (2025-11-14)
+            continue
+        if url.startswith("/documents/"):
+            docid = int(url.split("/")[-1])
+        elif "/files/" in url or "/resource/docs/" in url:
+            docid = url.split("#")[0]
+        else:
+            sys.exit(f"Unexpected URL {url} for {countryname}")
+        if isinstance(docid, str) and docid.startswith("https://unfccc.int"):
+            docid = docid[18:]
+        if isinstance(docid, str) and docid.startswith("http://unfccc.int"):
+            docid = docid[17:]
         nidids.add(docid)
     nid[countrycode] = sorted(nidids)
     crtids = set()
-    for url in tds[3].xpath("a/@href"):
-        if not url.startswith("/documents/"):
+    crturls = set()
+    for url in tds[crtcol].xpath(".//a/@href"):
+        if url.startswith("/documents/") or url.startswith("https://unfccc.int/documents/"):
+            docid = int(url.split("/")[-1])
+        elif "/files/" in url:
+            docid = url.split("#")[0]
+        else:
             sys.exit(f"Unexpected URL {url}")
-        docid = int(url.split("/")[-1])
-        crtids.add(docid)
-    crt[countrycode] = sorted(crtids)
+        if isinstance(docid, str) and docid.startswith("https://unfccc.int"):
+            crturls.add(docid[18:])
+        if isinstance(docid, str):
+            crturls.add(docid)
+        else:
+            crtids.add(docid)
+    crt[countrycode] = sorted(crtids) + sorted(crturls)
 
 if not args.resume:
     os.mkdir(outdir)
