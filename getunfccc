@@ -89,114 +89,31 @@ else:
 service = Service()
 driver = webdriver.Chrome(service=service)
 
+col = {}
 if args.year == "nonannexi":
-    crtcol = 1
-    nidcol = 2
+    col["crt"] = 1
+    col["nid"] = 2
     yurl = ("https://unfccc.int/process-and-meetings/transparency-and-reporting/"
             "reporting-and-review/transparency-data-and-tools/greenhouse-gas-data/"
             "data-sources/greenhouse-gas-inventory-submissions-from-non-annex-i-parties")
 else:
-    crtcol = 3
-    nidcol = 2
+    col["crt"] = 3
+    col["nid"] = 2
     yurl = f"https://unfccc.int/ghg-inventories-annex-i-parties/{args.year}"
 driver.get(yurl)
 htmlsrc = driver.page_source
 
 lhtml = lxml.html.document_fromstring(htmlsrc)
 
-crt = {}
-nid = {}
 table = lhtml.xpath("//table")[0]
 
-nid = {}
-crt = {}
-for tr in table.xpath(".//tr"):
-    tds = tr.xpath("td|th")
-    if not tds:
-        continue
-    countryname = tds[0].text_content().strip().strip("1234*")
-    if countryname == "Party":
-        continue
-    country = pycountry.countries.get(name=countryname)
-    if not country:
-        # e.g., needed for "Republic of Moldova"
-        country = pycountry.countries.get(official_name=countryname)
-    if not country:
-        if countryname == "European Union":
-            countrycode = "EU"
-        else:
-            sys.exit(f"Cannot find code for {countryname}")
-    else:
-        countrycode = country.alpha_3
+dat = {}
 
-    nidids = set()
-    for url in tds[nidcol].xpath(".//a/@href"):
-        if url.startswith("#"):
-            continue
-        if "/items/3599.php" in url:
-            # broken link on the UNFCCC non-annexi page,
-            # remove when fixed reported (2025-11-14)
-            continue
-        if url.startswith("/documents/"):
-            docid = int(url.split("/")[-1])
-        elif "/files/" in url or "/resource/docs/" in url:
-            docid = url.split("#")[0]
-        else:
-            sys.exit(f"Unexpected URL {url} for {countryname}")
-        if isinstance(docid, str) and docid.startswith("https://unfccc.int"):
-            docid = docid[18:]
-        if isinstance(docid, str) and docid.startswith("http://unfccc.int"):
-            docid = docid[17:]
-        nidids.add(docid)
-    nid[countrycode] = sorted(nidids)
-    crtids = set()
-    crturls = set()
-    for url in tds[crtcol].xpath(".//a/@href"):
-        if url.startswith("/documents/") or url.startswith("https://unfccc.int/documents/"):
-            docid = int(url.split("/")[-1])
-        elif "/files/" in url:
-            docid = url.split("#")[0]
-        else:
-            sys.exit(f"Unexpected URL {url}")
-        if isinstance(docid, str) and docid.startswith("https://unfccc.int"):
-            crturls.add(docid[18:])
-        if isinstance(docid, str):
-            crturls.add(docid)
-        else:
-            crtids.add(docid)
-    crt[countrycode] = sorted(crtids) + sorted(crturls)
 
 if not args.resume:
     os.mkdir(outdir)
-
-jnid = json.dumps(nid, indent=2)
-jcrt = json.dumps(crt, indent=2)
-nidpath = f"{outdir}/{args.year}-unfccc-nid"
-crtpath = f"{outdir}/{args.year}-unfccc-crt"
-jnidpath = f"{nidpath}/{args.year}-unfccc-nid.json"
-jcrtpath = f"{crtpath}/{args.year}-unfccc-crt.json"
-if not args.resume:
-    os.mkdir(nidpath)
-    os.mkdir(crtpath)
 else:
-    oldjnid = pathlib.Path(jnidpath).read_text()
-    oldjcrt = pathlib.Path(jcrtpath).read_text()
-    utcts = int(datetime.datetime.now(datetime.UTC).timestamp())
-    if oldjnid != jnid:
-        print("NID files changed")
-        os.rename(jnidpath, f"{jnidpath}.{utcts}.bak")
-    if oldjcrt != jcrt:
-        print("CRT files changed")
-        os.rename(jcrtpath, f"{jcrtpath}.{utcts}.bak")
-
-pathlib.Path(jnidpath).write_text(jnid)
-pathlib.Path(jcrtpath).write_text(jcrt)
-
-if args.meta:
-    sys.exit(0)
-
-# Remove any stale empty dirs from previous runs
-if args.resume:
+    # Remove any stale empty dirs from previous runs
     for root, dirs, files in os.walk(args.year):
         if not dirs and not files:
             print(f"Removing empty dir {root}")
@@ -206,16 +123,71 @@ if args.resume:
                 print(f"ERROR: Half-downloaded file {root}/{fn} found, please remove")
                 sys.exit(1)
 
-for country, citem in nid.items():
-    for docid in citem:
-        if not os.path.exists(f"{nidpath}/{country}/{docid}"):
-            getfile(docid, f"{nidpath}/{country}")
-        else:
-            print(f"{nidpath}/{country}/{docid} already exists")
+utcts = int(datetime.datetime.now(datetime.UTC).timestamp())
 
-for country, citem in crt.items():
-    for docid in citem:
-        if not os.path.exists(f"{crtpath}/{country}/{docid}"):
-            getfile(docid, f"{crtpath}/{country}")
+for dtype in ["nid", "crt"]:
+    dat[dtype] = {}
+
+    for tr in table.xpath(".//tr"):
+        tds = tr.xpath("td|th")
+        if not tds:
+            continue
+        countryname = tds[0].text_content().strip().strip("1234*")
+        if countryname == "Party":
+            continue
+        country = pycountry.countries.get(name=countryname)
+        if not country:
+            # e.g., needed for "Republic of Moldova"
+            country = pycountry.countries.get(official_name=countryname)
+        if not country:
+            if countryname == "European Union":
+                countrycode = "EU"
+            else:
+                sys.exit(f"Cannot find code for {countryname}")
         else:
-            print(f"{crtpath}/{country}/{docid} already exists")
+            countrycode = country.alpha_3
+
+        ids = set()
+        urls = set()
+        for url in tds[col[dtype]].xpath(".//a/@href"):
+            if url.startswith("#"):
+                continue
+            if "/items/3599.php" in url:
+                # broken link on the UNFCCC non-annexi page,
+                # remove when fixed reported (2025-11-14)
+                continue
+            if url.startswith("/documents/"):
+                docid = int(url.split("/")[-1])
+                ids.add(docid)
+            elif "/files/" in url or "/resource/docs/" in url:
+                docurl = url.split("#")[0]
+                docurl = docurl.removeprefix("https://unfccc.int")
+                docurl = docurl.removeprefix("http://unfccc.int")
+                urls.add(docurl)
+            else:
+                sys.exit(f"Unexpected URL {url} for {countryname}")
+        items = sorted(ids) + sorted(urls)
+        if items:
+            dat[dtype][countrycode] = items
+
+    jdat = json.dumps(dat[dtype], indent=2)
+    opath = f"{outdir}/{args.year}-unfccc-{dtype}"
+    jpath = f"{opath}/{args.year}-unfccc-{dtype}.json"
+    if not args.resume:
+        os.mkdir(opath)
+    else:
+        oldjson = pathlib.Path(jpath).read_text()
+        if oldjson != jdat:
+            print(f"{dtype} files changed")
+            os.rename(jpath, f"{jpath}.{utcts}.bak")
+    pathlib.Path(jpath).write_text(jdat)
+
+    if args.meta:
+        continue
+
+    for country, citem in dat[dtype].items():
+        for docid in citem:
+            if not os.path.exists(f"{opath}/{country}/{docid}"):
+                getfile(docid, f"{opath}/{country}")
+            else:
+                print(f"{opath}/{country}/{docid} already exists")
