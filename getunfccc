@@ -82,6 +82,8 @@ if __name__ == "__main__":
     ap.add_argument("-m", "--meta", action="store_true", help="Only fetch metadata")
     ap.add_argument("-r", "--resume", action="store_true", help="Resume mode")
     ap.add_argument("-o", "--outdir", help="Output directory (default out)")
+    ap.add_argument("--crt", action="store_true", help="Only download CRT documents")
+    ap.add_argument("--nid", action="store_true", help="Only download NID documents")
     args = ap.parse_args()
 
     if args.outdir:
@@ -131,7 +133,15 @@ if __name__ == "__main__":
 
     utcts = int(datetime.datetime.now(datetime.UTC).timestamp())
 
-    for dtype in ["nid", "crt"]:
+    dtypes = []
+    if args.crt:
+        dtypes.append("crt")
+    if args.nid:
+        dtypes.append("nid")
+    if not dtypes:
+        dtypes = ["crt", "nid"]
+
+    for dtype in dtypes:
         dat[dtype] = {}
 
         for tr in table.xpath(".//tr"):
