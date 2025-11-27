@@ -1,0 +1,8 @@
+#!/bin/bash
+# SPDX-License-Identifier: 0BSD
+
+for x in $(find -mindepth 1 -maxdepth 1 -type d); do
+	# avoid unnecessary metadata, see
+	# https://reproducible-builds.org/docs/archives/
+	tar --sort=name --owner=0 --group=0 --numeric-owner --format=ustar -cJf $x.tar.xz $x
+done
