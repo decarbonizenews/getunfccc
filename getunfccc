@@ -147,7 +147,9 @@ if __name__ == "__main__":
                 country = pycountry.countries.get(official_name=countryname)
             if not country:
                 if countryname == "European Union":
-                    countrycode = "EU"
+                    # There is no official 3 letter country code for the EU,
+                    # but the CRT xslx files use EUA
+                    countrycode = "EUA"
                 else:
                     sys.exit(f"Cannot find code for {countryname}")
             else:
