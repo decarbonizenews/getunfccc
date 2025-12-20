@@ -1,0 +1,101 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: 0BSD
+#
+# Fetches download filenames from
+# https://unfccc.int/first-biennial-transparency-reports
+
+import argparse
+import json
+import pathlib
+import secrets
+import sys
+import time
+
+import lxml.html
+import pycountry
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+
+URL = "https://unfccc.int/first-biennial-transparency-reports"
+
+
+def getcountrycode(countryname):
+    # not autodetected by pycountry
+    countryquirks = {
+        "Democratic Republic of the Congo": "COD",
+        "European Union": "EUA",
+        "Holy See": "VAT",
+        "Republic of Korea": "KOR",
+        "State of Palestine": "PSE",
+    }
+    if "(" in countryname:
+        countryname = countryname.replace(" (", ", ").replace(")", "")
+    country = pycountry.countries.get(name=countryname)
+    if not country:
+        country = pycountry.countries.get(official_name=countryname)
+    if not country:
+        country = pycountry.countries.get(common_name=countryname)
+    if country:
+        return country.alpha_3
+    if countryname in countryquirks:
+        return countryquirks[countryname]
+    sys.exit(f"Error: Cannot find countrycode for {countryname}")
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("output")
+    ap.add_argument("--type", default="crt")
+    ap.add_argument("--resume")
+    args = ap.parse_args()
+
+    dat = {}
+    if args.resume:
+        dat = json.loads(pathlib.Path(args.resume).read_text())
+
+    service = Service()
+    driver = webdriver.Chrome(service=service)
+
+    driver.get(URL)
+    time.sleep(2)
+    htmlraw = driver.page_source
+    lx = lxml.html.fromstring(htmlraw)
+
+    for tr in lx.xpath(".//tr"):
+        tds = tr.xpath(".//td")
+        if not tds:
+            continue
+        countryname = tds[0].text_content().strip()
+        countrycode = getcountrycode(countryname)
+        for link in tds[2].xpath(".//a"):
+            if args.type != link.text_content().lower():
+                continue
+            if countrycode not in dat:
+                dat[countrycode] = {}
+            href = link.get("href")
+            if not ("documents/" in href or "node/" in href or "NODE/" in href):
+                sys.exit(f"ERROR with {countryname} {type} {href}")
+
+            docid = href.split("/")[-1]
+            if docid in dat[countrycode]:
+                continue
+
+            driver.get(f"https://unfccc.int/documents/{docid}")
+            time.sleep(3 + secrets.randbelow(3))
+            dx = lxml.html.fromstring(driver.page_source)
+            downlink = dx.xpath(".//a[@class='document-preview']")
+            respath = "/sites/default/files/resource/"
+            urlpaths = []
+            if downlink:
+                urlpaths = [downlink[0].get("href").strip().replace(respath, "")]
+            else:  # multiple files
+                downlinks = dx.xpath(".//ul[@class='preview-document-list']//a")
+                for d in downlinks:
+                    urlpaths.append(d.get("href").strip().replace(respath, ""))
+            if not urlpaths:
+                sys.exit(f"ERROR extracting download URL https://unfccc.int/documents/{docid}")
+            dat[countrycode][docid] = urlpaths
+            tfname = f"_{args.output}.tmp"
+            pathlib.Path(tfname).write_text(json.dumps(dat, indent=2) + "\n")
+
+    pathlib.Path(args.output).write_text(json.dumps(dat, indent=2) + "\n")
