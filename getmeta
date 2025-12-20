@@ -98,4 +98,5 @@ if __name__ == "__main__":
             tfname = f"_{args.output}.tmp"
             pathlib.Path(tfname).write_text(json.dumps(dat, indent=2) + "\n")
 
+    dat = dict(sorted(dat.items()))
     pathlib.Path(args.output).write_text(json.dumps(dat, indent=2) + "\n")

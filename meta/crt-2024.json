@@ -4,9 +4,9 @@
       "ALB-CRT-2024-V2.0-20251103-231619_awaiting%20submission.zip"
     ]
   },
-  "DZA": {
-    "645158": [
-      "DZA-CRT-2024-V0.1-20241225-153939_started.zip"
+  "ARE": {
+    "654335": [
+      "ARE-CRT-2024-2019-2022-132420.zip"
     ]
   },
   "ARG": {
@@ -29,6 +29,21 @@
       "AZE-CRT-2024-V0.17-20241231-050131_started.zip"
     ]
   },
+  "BEL": {
+    "644992": [
+      "BEL-CRT-2024-V1.0-20241217-192810_awaiting%20submission.zip"
+    ]
+  },
+  "BFA": {
+    "653007": [
+      "BFA-CRT-2024-V0.4-20251109-154548_awaiting%20approval.zip"
+    ]
+  },
+  "BGR": {
+    "644995": [
+      "BGR-CRT-2024-V0.1-20241216-122428_approved.zip"
+    ]
+  },
   "BHR": {
     "655130": [
       "30112025_BHR-CRT-2024-V0.2-20250420-122954_vSubmitted.zip"
@@ -39,19 +54,9 @@
       "BLR-CRT-2024-V0.2-20241230-164120_approved.zip"
     ]
   },
-  "BEL": {
-    "644992": [
-      "BEL-CRT-2024-V1.0-20241217-192810_awaiting%20submission.zip"
-    ]
-  },
   "BLZ": {
     "655004": [
       "BLZ-CRT-2024-V0.16-20250124-212751_started.zip"
-    ]
-  },
-  "BTN": {
-    "645294": [
-      "Annexure%20III_Bhutan%20CRT%20Tables%20for%20GHG%20Inventory.zip"
     ]
   },
   "BRA": {
@@ -64,19 +69,19 @@
       "BRN-CRT-2024-V0.1-20250107-081727_started.zip"
     ]
   },
-  "BGR": {
-    "644995": [
-      "BGR-CRT-2024-V0.1-20241216-122428_approved.zip"
-    ]
-  },
-  "BFA": {
-    "653007": [
-      "BFA-CRT-2024-V0.4-20251109-154548_awaiting%20approval.zip"
+  "BTN": {
+    "645294": [
+      "Annexure%20III_Bhutan%20CRT%20Tables%20for%20GHG%20Inventory.zip"
     ]
   },
   "CAN": {
     "641777": [
       "CAN-CRT-2024-V0.1-20241012.zip"
+    ]
+  },
+  "CHE": {
+    "644828": [
+      "CHE-CRT-2024-V1.0-20241211-180354.zip"
     ]
   },
   "CHL": {
@@ -91,6 +96,11 @@
       "HKSAR.zip"
     ]
   },
+  "CIV": {
+    "645264": [
+      "CIV-CRT-2024-V1.4-20251110-150925_started.zip"
+    ]
+  },
   "COL": {
     "645258": [
       "4.%20CRT%20Colombia.zip"
@@ -99,16 +109,6 @@
   "CRI": {
     "650148": [
       "CRI-CRT-2024-V0.1-20250901-122258_started.zip"
-    ]
-  },
-  "CIV": {
-    "645264": [
-      "CIV-CRT-2024-V1.4-20251110-150925_started.zip"
-    ]
-  },
-  "HRV": {
-    "644960": [
-      "HRV-CRT-2024-V0.1-20241125-130506_started.zip"
     ]
   },
   "CUB": {
@@ -126,9 +126,19 @@
       "CZE-CRT-2024-V0.1-20241216-082215_approved.zip"
     ]
   },
+  "DEU": {
+    "645363": [
+      "DEU-CRT-2024-V1.1-20241206-101928_started.zip"
+    ]
+  },
   "DNK": {
     "644918": [
       "DNK-CRT-2024-V0.7-20241028-154625_started.zip"
+    ]
+  },
+  "DZA": {
+    "645158": [
+      "DZA-CRT-2024-V0.1-20241225-153939_started.zip"
     ]
   },
   "ECU": {
@@ -141,14 +151,14 @@
       "EGY-CRT-2024-V0.4-20241230-110251_started.zip"
     ]
   },
+  "ESP": {
+    "644953": [
+      "ESP-CRT-2024-V0.2-20241216-142841_started.zip"
+    ]
+  },
   "EST": {
     "645198": [
       "EST-CRT-2024-V1.0-20241220-135059_awaiting%20submission.zip"
-    ]
-  },
-  "SWZ": {
-    "655210": [
-      "SWZ-CRT-2024-V0.5-20241221-223528_started.zip"
     ]
   },
   "EUA": {
@@ -166,19 +176,24 @@
       "FRA-CRT-2024-V0.6-20241216-161112_started.zip"
     ]
   },
+  "GBR": {
+    "645243": [
+      "GBR-CRT-2024-V1.1-1990To2022-20241227-053246_started.zip"
+    ]
+  },
   "GEO": {
     "645240": [
       "GEO%20CRT_non-Confidential.zip"
     ]
   },
-  "DEU": {
-    "645363": [
-      "DEU-CRT-2024-V1.1-20241206-101928_started.zip"
-    ]
-  },
   "GHA": {
     "645133": [
       "GHA-CRT-2024-V0.1-20241225-110923_started.zip"
+    ]
+  },
+  "GNB": {
+    "645312": [
+      "GNB-CRT-2024-V0.7-20250101-134400_started.zip"
     ]
   },
   "GRC": {
@@ -191,19 +206,14 @@
       "GTM-CRT-2024-V0.3-20250304-084824_started.zip"
     ]
   },
-  "GNB": {
-    "645312": [
-      "GNB-CRT-2024-V0.7-20250101-134400_started.zip"
-    ]
-  },
   "GUY": {
     "641006": [
       "CRT%20-%20Guyana%20BTR%202024.zip"
     ]
   },
-  "VAT": {
-    "645138": [
-      "VAT-CRT-2024-V0.2-20241218-150748_awaiting%20approval.zip"
+  "HRV": {
+    "644960": [
+      "HRV-CRT-2024-V0.1-20241125-130506_started.zip"
     ]
   },
   "HUN": {
@@ -211,14 +221,14 @@
       "HUN-CRT-2024-V1.0-20250221-153240_awaiting%20submission.zip"
     ]
   },
-  "ISL": {
-    "645044": [
-      "ISL-CRT-2024-V1.0-20241219-110923.zip"
-    ]
-  },
   "IDN": {
     "645084": [
       "IDN-CRT-2024-V0.16-20241212-204251_started.zip"
+    ]
+  },
+  "IRL": {
+    "644989": [
+      "IRL-CRT-2024-V1.0-1990-2022-20241217-102401.zip"
     ]
   },
   "IRQ": {
@@ -226,9 +236,9 @@
       "IRQ-CRT-2024-V0.1-20241216-142723_started.zip"
     ]
   },
-  "IRL": {
-    "644989": [
-      "IRL-CRT-2024-V1.0-1990-2022-20241217-102401.zip"
+  "ISL": {
+    "645044": [
+      "ISL-CRT-2024-V1.0-20241219-110923.zip"
     ]
   },
   "ISR": {
@@ -241,15 +251,15 @@
       "ITA-CRT-2024-V1.0-20241115-162239_awaiting%20submission.zip"
     ]
   },
-  "JPN": {
-    "644765": [
-      "JPN-CRT-2024-V1.0-20241203-155039_awaiting%20submission.zip"
-    ]
-  },
   "JOR": {
     "653001": [
       "JOR-CRT-2025-V1.2-2012-2022.zip",
       "Annex%20I%20JOR-CRT-2025-V1.3-2023-20251029-114641_awaiting%20approval.xlsx"
+    ]
+  },
+  "JPN": {
+    "644765": [
+      "JPN-CRT-2024-V1.0-20241203-155039_awaiting%20submission.zip"
     ]
   },
   "KAZ": {
@@ -262,9 +272,9 @@
       "KEN-CRT-2024-V0.4-1990-2022-20250130-151128_awaiting%20approval.zip"
     ]
   },
-  "LVA": {
-    "644947": [
-      "LVA-CRT-2024-V0.1-20241212-105356_approved.zip"
+  "KOR": {
+    "650156": [
+      "KOR-CRT-2024-V0.24-20250922-171141_started.zip"
     ]
   },
   "LBN": {
@@ -277,6 +287,11 @@
       "LIE-CRT-2024-V1.0-20250210-164414_submitted.zip"
     ]
   },
+  "LKA": {
+    "646724": [
+      "CRT%20Table%20_%20Sri%20Lanka.xlsx"
+    ]
+  },
   "LTU": {
     "645047": [
       "LTU-CRT-2024-V0.4-20241217-083654_approved.zip"
@@ -287,14 +302,34 @@
       "LUX-CRT-2024-V1.0-20250116-080735_awaiting%20submission.zip"
     ]
   },
-  "MYS": {
-    "645172": [
-      "MYS-CRT-2024-V0.12-20241231-124050_started.zip"
+  "LVA": {
+    "644947": [
+      "LVA-CRT-2024-V0.1-20241212-105356_approved.zip"
+    ]
+  },
+  "MAR": {
+    "645213": [
+      "MAR-CRT-2024-V0.15-20241229-195341_started.zip"
+    ]
+  },
+  "MCO": {
+    "641052": [
+      "MCO-CRT-2024-V0.1-20240930-112600_started.zip"
+    ]
+  },
+  "MDA": {
+    "646419": [
+      "MDA-CRT-2024-V1.0-20250407-094136_awaiting%20submission.zip"
     ]
   },
   "MDV": {
     "643924": [
       "MDV-CRT-2024.zip"
+    ]
+  },
+  "MEX": {
+    "648132": [
+      "MEX-CRT-2024-V1.2-20250902-121844_started.zip"
     ]
   },
   "MLT": {
@@ -307,19 +342,9 @@
       "CRT%20Mauritius%20for%20GHG%20Inventory%20Final.zip"
     ]
   },
-  "MEX": {
-    "648132": [
-      "MEX-CRT-2024-V1.2-20250902-121844_started.zip"
-    ]
-  },
-  "MCO": {
-    "641052": [
-      "MCO-CRT-2024-V0.1-20240930-112600_started.zip"
-    ]
-  },
-  "MAR": {
-    "645213": [
-      "MAR-CRT-2024-V0.15-20241229-195341_started.zip"
+  "MYS": {
+    "645172": [
+      "MYS-CRT-2024-V0.12-20241231-124050_started.zip"
     ]
   },
   "NAM": {
@@ -327,9 +352,9 @@
       "NAM-CRT-2024-V0.1-20241107-111227_started.zip"
     ]
   },
-  "NPL": {
-    "647372": [
-      "NPL-CRT-2024-V1.0-20250605-154236_awaiting%20submission.zip"
+  "NGA": {
+    "645111": [
+      "NGA-CRT-2024-V0.1-20241223-102421_started%20%282%29.zip"
     ]
   },
   "NLD": {
@@ -337,19 +362,19 @@
       "03%20NLD-CRT-2024-V0.1-20241030-091300_started.zip"
     ]
   },
-  "NZL": {
-    "642204": [
-      "NZL-CRT-2024-V1.1-20241203-174908_awaiting%20approval.zip"
-    ]
-  },
-  "NGA": {
-    "645111": [
-      "NGA-CRT-2024-V0.1-20241223-102421_started%20%282%29.zip"
-    ]
-  },
   "NOR": {
     "644485": [
       "NOR-CRT-2024-V0.4-20241122-100056_approved.zip"
+    ]
+  },
+  "NPL": {
+    "647372": [
+      "NPL-CRT-2024-V1.0-20250605-154236_awaiting%20submission.zip"
+    ]
+  },
+  "NZL": {
+    "642204": [
+      "NZL-CRT-2024-V1.1-20241203-174908_awaiting%20approval.zip"
     ]
   },
   "OMN": {
@@ -360,11 +385,6 @@
   "PAN": {
     "645381": [
       "PAN-CRT-2024-V0.3-20250110-115408_started.zip"
-    ]
-  },
-  "PRY": {
-    "645202": [
-      "PRY-CRT-20241230_rect.zip"
     ]
   },
   "PER": {
@@ -382,14 +402,9 @@
       "PRT-CRT-2024-V0.5-1990-2022-20241211-114303_started.zip"
     ]
   },
-  "KOR": {
-    "650156": [
-      "KOR-CRT-2024-V0.24-20250922-171141_started.zip"
-    ]
-  },
-  "MDA": {
-    "646419": [
-      "MDA-CRT-2024-V1.0-20250407-094136_awaiting%20submission.zip"
+  "PRY": {
+    "645202": [
+      "PRY-CRT-20241230_rect.zip"
     ]
   },
   "ROU": {
@@ -412,14 +427,19 @@
       "SAU-Inventory.zip"
     ]
   },
-  "SRB": {
-    "645109": [
-      "CRT%201990-2022.zip"
-    ]
-  },
   "SGP": {
     "643040": [
       "Singapore%20CRT.zip"
+    ]
+  },
+  "SLB": {
+    "649183": [
+      "SI-CRT-BTR-2024.zip"
+    ]
+  },
+  "SRB": {
+    "645109": [
+      "CRT%201990-2022.zip"
     ]
   },
   "SVK": {
@@ -432,44 +452,24 @@
       "SVN-CRT-2024-V0.9-20241203-112408_approved.zip"
     ]
   },
-  "SLB": {
-    "649183": [
-      "SI-CRT-BTR-2024.zip"
-    ]
-  },
-  "ZAF": {
-    "645525": [
-      "ZAF-CRT-2024-V0.3-20250429-155928_awaiting%20approval.zip"
-    ]
-  },
-  "ESP": {
-    "644953": [
-      "ESP-CRT-2024-V0.2-20241216-142841_started.zip"
-    ]
-  },
-  "LKA": {
-    "646724": [
-      "CRT%20Table%20_%20Sri%20Lanka.xlsx"
-    ]
-  },
   "SWE": {
     "645010": [
       "Sweden.%202024%20Common%20Reporting%20Tables.zip"
     ]
   },
-  "CHE": {
-    "644828": [
-      "CHE-CRT-2024-V1.0-20241211-180354.zip"
-    ]
-  },
-  "TJK": {
-    "645129": [
-      "TJK-CRT-2024.zip"
+  "SWZ": {
+    "655210": [
+      "SWZ-CRT-2024-V0.5-20241221-223528_started.zip"
     ]
   },
   "THA": {
     "647453": [
       "THA-CRT-2025-V0.5-20250611-173334_started.zip"
+    ]
+  },
+  "TJK": {
+    "645129": [
+      "TJK-CRT-2024.zip"
     ]
   },
   "TUN": {
@@ -487,14 +487,9 @@
       "UKR-CRT-2024-V0.1-20241224-091701_approved.zip"
     ]
   },
-  "ARE": {
-    "654335": [
-      "ARE-CRT-2024-2019-2022-132420.zip"
-    ]
-  },
-  "GBR": {
-    "645243": [
-      "GBR-CRT-2024-V1.1-1990To2022-20241227-053246_started.zip"
+  "URY": {
+    "645271": [
+      "URY-CRT-2024-V0.3-20241231.zip"
     ]
   },
   "USA": {
@@ -502,19 +497,24 @@
       "USA-CRT-2024-V0.5-submission-started.zip"
     ]
   },
-  "URY": {
-    "645271": [
-      "URY-CRT-2024-V0.3-20241231.zip"
-    ]
-  },
   "UZB": {
     "645174": [
       "UZB-CRT-2024.zip"
     ]
   },
+  "VAT": {
+    "645138": [
+      "VAT-CRT-2024-V0.2-20241218-150748_awaiting%20approval.zip"
+    ]
+  },
   "VEN": {
     "645308": [
       "VEN-CRT-2024-V0.12-20241231-083507%20%28Rev%20C%29.zip"
+    ]
+  },
+  "ZAF": {
+    "645525": [
+      "ZAF-CRT-2024-V0.3-20250429-155928_awaiting%20approval.zip"
     ]
   },
   "ZWE": {
