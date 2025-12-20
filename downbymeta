@@ -1,0 +1,37 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: 0BSD
+
+import argparse
+import json
+import os
+import pathlib
+import urllib.parse
+import urllib.request
+
+ap = argparse.ArgumentParser()
+ap.add_argument("metafile")
+ap.add_argument("outdir")
+args = ap.parse_args()
+
+dat = json.loads(pathlib.Path(args.metafile).read_text())
+
+op = urllib.request.build_opener()
+op.addheaders = [("User-agent",
+                  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.3")]
+urllib.request.install_opener(op)
+
+for country, dl in dat.items():
+    docid, urllist = next(iter(dl.items()))
+    outdp = f"{args.outdir}/{country}/{docid}"
+    for url in urllist:
+        fn = urllib.parse.unquote(url)
+        outfp = f"{outdp}/{fn}"
+        outtemp = f"{outdp}/_{fn}.tmp"
+        if os.path.isfile(outfp):
+            continue
+        durl = f"https://unfccc.int/sites/default/files/resource/{url}"
+        print(f"Saving {durl} to {outfp}")
+        os.makedirs(outdp, exist_ok=True)
+        urllib.request.urlretrieve(durl, outtemp)
+        os.rename(outtemp, outfp)
