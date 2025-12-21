@@ -24,6 +24,11 @@
       "BLR-CRT-2025-V1.0-20250430-121132_awaiting%20submission.zip"
     ]
   },
+  "CAN": {
+    "646188": [
+      "CAN-CRT-2025-V0.5-20250311.zip"
+    ]
+  },
   "CHE": {
     "646408": [
       "CHE-CRT-2025-V1.0-20250409-144413_awaiting%20submission.zip"
@@ -129,6 +134,11 @@
       "LTU-CRT-2025-V1.0-20250415-185318_awaiting%20submission.zip"
     ]
   },
+  "LUX": {
+    "646502": [
+      "LUX-CRT-2025-V1.0-20250415-115925_awaiting%20submission.zip"
+    ]
+  },
   "LVA": {
     "646437": [
       "LVA-CRT-2025-V0.3-20250409-145223_awaiting%20approval.zip"
@@ -147,6 +157,11 @@
   "NLD": {
     "646511": [
       "NLD-CRT-2025.zip"
+    ]
+  },
+  "NOR": {
+    "646059": [
+      "NOR-CRT-2025-V1.0-20250314-104902_awaiting_submission.zip"
     ]
   },
   "NZL": {
@@ -169,9 +184,19 @@
       "ROU-CRT-2025-V1.8-20250227-141057_started.zip"
     ]
   },
+  "RUS": {
+    "646538": [
+      "RUS-CRT-2025-V1.0-20250419-003747_awaiting%20submission.zip"
+    ]
+  },
   "SRB": {
     "646485": [
       "SRB_CRT_2025_31.03.2025.zip"
+    ]
+  },
+  "SVK": {
+    "646464": [
+      "SVK-CRT-15-4-2025.zip"
     ]
   },
   "SVN": {

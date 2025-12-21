@@ -73,7 +73,7 @@ if __name__ == "__main__":
             ctype = link.text_content().lower()
             # On the National Inventory Submission pages, the CRT link is
             # called "Convention"
-            if ctype == "convention":
+            if ctype == "convention" or ctype == "convention and pa":
                 ctype = "crt"
             if args.type != ctype:
                 continue
