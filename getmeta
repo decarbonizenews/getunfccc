@@ -30,6 +30,7 @@ def getcountrycode(countryname):
     }
     if "(" in countryname:
         countryname = countryname.replace(" (", ", ").replace(")", "")
+    countryname = countryname.rstrip("1")
     country = pycountry.countries.get(name=countryname)
     if not country:
         country = pycountry.countries.get(official_name=countryname)
@@ -68,8 +69,13 @@ if __name__ == "__main__":
             continue
         countryname = tds[0].text_content().strip()
         countrycode = getcountrycode(countryname)
-        for link in tds[2].xpath(".//a"):
-            if args.type != link.text_content().lower():
+        for link in tr.xpath(".//a"):
+            ctype = link.text_content().lower()
+            # On the National Inventory Submission pages, the CRT link is
+            # called "Convention"
+            if ctype == "convention":
+                ctype = "crt"
+            if args.type != ctype:
                 continue
             if countrycode not in dat:
                 dat[countrycode] = {}
