@@ -21,13 +21,15 @@ op.addheaders = [("User-agent",
                   "(KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.3")]
 urllib.request.install_opener(op)
 
+filelist = set()
 for country, dl in dat.items():
     docid, urllist = next(iter(dl.items()))
-    outdp = f"{args.outdir}/{country}/{docid}"
+    outdp = os.path.join(args.outdir, country, docid)
     for url in urllist:
         fn = urllib.parse.unquote(url)
-        outfp = f"{outdp}/{fn}"
-        outtemp = f"{outdp}/_{fn}.tmp"
+        outfp = os.path.join(outdp, fn)
+        filelist.add(outfp)
+        outtemp = os.path.join(outdp, f"_{fn}.tmp")
         if os.path.isfile(outfp):
             continue
         durl = f"https://unfccc.int/sites/default/files/resource/{url}"
@@ -35,3 +37,11 @@ for country, dl in dat.items():
         os.makedirs(outdp, exist_ok=True)
         urllib.request.urlretrieve(durl, outtemp)
         os.rename(outtemp, outfp)
+
+for root, dirs, files in os.walk(args.outdir):
+    if not files and not dirs:
+        print(f"WARNING: empty directory {root}")
+    for name in files:
+        fp = os.path.join(root, name)
+        if fp not in filelist:
+            print(f"WARNING: unknown/obsolete file {fp}")
