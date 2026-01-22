@@ -1,5 +1,10 @@
 #!/usr/bin/python3
 # SPDX-License-Identifier: 0BSD
+#
+# (c) Hanno Böck, Industry Decarbonization Newsletter
+# See also: https://industrydecarbonization.com/docs/unfccc/
+#
+# NOTE: mostly obsolete and replaced by getmeta/downbymeta
 
 import argparse
 import datetime
