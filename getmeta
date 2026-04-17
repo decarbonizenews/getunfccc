@@ -49,7 +49,7 @@ def getcountrycode(countryname):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("output")
-    ap.add_argument("--type", default="crt")
+    ap.add_argument("--type", default="crt", help="crt or nid (default: crt)")
     ap.add_argument("--resume")
     ap.add_argument("--url", default=BTRURL)
     args = ap.parse_args()
